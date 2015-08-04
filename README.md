@@ -27,3 +27,5 @@ sh MasterCollectl.sh --help : Displays the help information.
 sh MasterCollectl.sh --verify : Verifies if the collectl daemon is running on each node of the cluster.
 
 sh MasterCollectl.sh --cleanup : Deletes the old metric files from all nodes of the cluster specified in the nodesConfig.cfg file.
+
+Please feel free to modify the code as per your requirements.
