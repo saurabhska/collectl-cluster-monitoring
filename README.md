@@ -20,7 +20,7 @@ sh MasterCollectl.sh --start : Starts the collectl daemon process on each node i
 
 sh MasterCollectl.sh --stops : Stops the collectl daemon process on each node in the cluster whose information is mentioned in the nodesConfig.cfg file.
 
-sh MasterCollectl.sh --dump : Copies the raw metrics collected by the collectl daemon processes to the master node, preprocesses them to generate the required CSVs, generates the aggregate outputs and stores them into the Teradata database.
+sh MasterCollectl.sh --dump : Copies the raw metrics collected by the collectl daemon processes to the master node, preprocesses them to generate the required CSVs, generates the aggregate outputs and stores them into the Teradata database. (It uses the Teradata multiload utility to load CSVs into the Teradata database, you can use the RDBMS specific utility to load the CSV into any other RDBMS of your choice).
 
 sh MasterCollectl.sh --help : Displays the help information.
 
