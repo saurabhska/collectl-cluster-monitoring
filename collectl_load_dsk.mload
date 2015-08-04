@@ -1,0 +1,47 @@
+.LOGTABLE mylogtabledsk;
+
+.LOGON masterserver.mycluster.com/myadmin,myadmin;
+
+database mytestdb;
+
+.BEGIN IMPORT MLOAD
+      TABLES collectl_dsk;
+
+.LAYOUT DATAIN_LAYOUT INDICATORS;
+.FIELD hostname * VARCHAR(50);
+.FIELD date_dsk * VARCHAR(50);
+.FIELD time_dsk * VARCHAR(50);
+.FIELD ReadTot * VARCHAR(50);
+.FIELD WriteTot * VARCHAR(50);
+.FIELD OpsTot * VARCHAR(50);
+.FIELD ReadKBTot * VARCHAR(50);
+.FIELD WriteKBTot * VARCHAR(50);
+.FIELD KbTot * VARCHAR(50);
+.FIELD ReadMrgTot * VARCHAR(50);
+.FIELD WriteMrgTot * VARCHAR(50);
+.FIELD MrgTot * VARCHAR(50);
+
+.DML LABEL INSERT_DML;
+INSERT INTO collectl_dsk (
+hostname =:hostname
+,date_dsk = CAST(:date_dsk as DATE)
+,time_dsk = CAST(:time_dsk as TIME)
+,ReadTot = CAST(:ReadTot as BIGINT)
+,WriteTot = CAST(:WriteTot as BIGINT)
+,OpsTot = CAST(:OpsTot as BIGINT)
+,ReadKBTot = CAST(:ReadKBTot as BIGINT)
+,WriteKBTot = CAST(:WriteKBTot as BIGINT)
+,KbTot = CAST(:KbTot as BIGINT)
+,ReadMrgTot = CAST(:ReadMrgTot as BIGINT)
+,WriteMrgTot = CAST(:WriteMrgTot as BIGINT)
+,MrgTot = CAST(:MrgTot as BIGINT)
+);
+
+.IMPORT INFILE /root/collectlMasterTemp/output/dsk.txt
+ FORMAT VARTEXT ','
+ LAYOUT DATAIN_LAYOUT
+ APPLY INSERT_DML;
+
+.END MLOAD;
+
+.LOGOFF;

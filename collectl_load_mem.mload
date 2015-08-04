@@ -1,0 +1,88 @@
+.LOGTABLE mylogtablemem;
+
+.LOGON masterserver.mycluster.com/myadmin,myadmin;
+
+database mytestdb;
+
+
+.BEGIN IMPORT MLOAD
+      TABLES collectl_mem;
+
+.LAYOUT DATAIN_LAYOUT INDICATORS;
+.FIELD hostname * VARCHAR(50);
+.FIELD date_mem * VARCHAR(50);
+.FIELD time_mem * VARCHAR(50);
+.FIELD Tot * VARCHAR(50);
+.FIELD Used * VARCHAR(50);
+.FIELD Free * VARCHAR(50);
+.FIELD Shared * VARCHAR(50);
+.FIELD Buf * VARCHAR(50);
+.FIELD Cached * VARCHAR(50);
+.FIELD Slab * VARCHAR(50);
+.FIELD Map_mem * VARCHAR(50);
+.FIELD Anon * VARCHAR(50);
+.FIELD Commit_mem * VARCHAR(50);
+.FIELD Locked * VARCHAR(50);
+.FIELD SwapTot * VARCHAR(50);
+.FIELD SwapUsed * VARCHAR(50);
+.FIELD SwapFree * VARCHAR(50);
+.FIELD SwapIn * VARCHAR(50);
+.FIELD SwapOut * VARCHAR(50);
+.FIELD Dirty * VARCHAR(50);
+.FIELD Clean * VARCHAR(50);
+.FIELD Laundry * VARCHAR(50);
+.FIELD Inactive * VARCHAR(50);
+.FIELD PageIn * VARCHAR(50);
+.FIELD PageOut * VARCHAR(50);
+.FIELD PageFaults * VARCHAR(50);
+.FIELD PageMajFaults * VARCHAR(50);
+.FIELD HugeTotal * VARCHAR(50);
+.FIELD HugeFree * VARCHAR(50);
+.FIELD HugeRsvd * VARCHAR(50);
+.FIELD SUnreclaim * VARCHAR(50);
+
+
+.DML LABEL INSERT_DML;
+INSERT INTO collectl_mem (
+
+hostname =:hostname
+,date_mem = CAST(:date_mem as DATE)
+,time_mem = CAST(:time_mem as TIME)
+,Tot = CAST(:Tot as BIGINT)
+,Used = CAST(:Used as BIGINT)
+,Free = CAST(:Free as BIGINT)
+,Shared = CAST(:Shared as BIGINT)
+,Buf = CAST(:Buf as BIGINT)
+,Cached = CAST(:Cached as BIGINT)
+,Slab = CAST(:Slab as BIGINT)
+,Map_mem = CAST(:Map_mem as BIGINT)
+,Anon = CAST(:Anon as BIGINT)
+,Commit_mem = CAST(:Commit_mem as BIGINT)
+,Locked = CAST(:Locked as BIGINT)
+,SwapTot = CAST(:SwapTot as BIGINT)
+,SwapUsed = CAST(:SwapUsed as BIGINT)
+,SwapFree = CAST(:SwapFree as BIGINT)
+,SwapIn = CAST(:SwapIn as BIGINT)
+,SwapOut = CAST(:SwapOut as BIGINT)
+,Dirty = CAST(:Dirty as BIGINT)
+,Clean = CAST(:Clean as BIGINT)
+,Laundry = CAST(:Laundry as BIGINT)
+,Inactive = CAST(:Inactive as BIGINT)
+,PageIn = CAST(:PageIn as BIGINT)
+,PageOut = CAST(:PageOut as BIGINT)
+,PageFaults = CAST(:PageFaults as BIGINT)
+,PageMajFaults = CAST(:PageMajFaults as BIGINT)
+,HugeTotal = CAST(:HugeTotal as BIGINT)
+,HugeFree = CAST(:HugeFree as BIGINT)
+,HugeRsvd = CAST(:HugeRsvd as BIGINT)
+,SUnreclaim = CAST(:SUnreclaim as BIGINT)
+);
+
+.IMPORT INFILE /root/collectlMasterTemp/output/mem.txt
+ FORMAT VARTEXT ','
+ LAYOUT DATAIN_LAYOUT
+ APPLY INSERT_DML;
+
+.END MLOAD;
+
+.LOGOFF;

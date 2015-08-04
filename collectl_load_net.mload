@@ -1,0 +1,49 @@
+.LOGTABLE mylogtablenet;
+
+.LOGON masterserver.mycluster.com/myadmin,myadmin;
+
+database mytestdb;
+
+
+.BEGIN IMPORT MLOAD
+      TABLES collectl_net;
+
+.LAYOUT DATAIN_LAYOUT INDICATORS;
+.FIELD hostname * VARCHAR(50);
+.FIELD date_net * VARCHAR(50);
+.FIELD time_net * VARCHAR(50);
+.FIELD RxPktTot * VARCHAR(50);
+.FIELD TxPktTot * VARCHAR(50);
+.FIELD RxKBTot * VARCHAR(50);
+.FIELD TxKBTot * VARCHAR(50);
+.FIELD RxCmpTot * VARCHAR(50);
+.FIELD RxMltTot * VARCHAR(50);
+.FIELD TxCmpTot * VARCHAR(50);
+.FIELD RxErrsTot * VARCHAR(50);
+.FIELD TxErrsTot * VARCHAR(50);
+
+.DML LABEL INSERT_DML;
+
+INSERT INTO collectl_net (
+hostname =:hostname
+,date_net = CAST(:date_net as DATE)
+,time_net = CAST(:time_net as TIME)
+,RxPktTot = CAST(:RxPktTot as bigint)
+,TxPktTot = CAST(:TxPktTot as bigint)
+,RxKBTot = CAST(:RxKBTot as bigint)
+,TxKBTot = CAST(:TxKBTot as bigint)
+,RxCmpTot = CAST(:RxCmpTot as bigint)
+,RxMltTot = CAST(:RxMltTot as bigint)
+,TxCmpTot = CAST(:TxCmpTot as bigint)
+,RxErrsTot = CAST(:RxErrsTot as bigint)
+,TxErrsTot = CAST(:TxErrsTot as bigint)
+);
+
+.IMPORT INFILE /root/collectlMasterTemp/output/net.txt
+ FORMAT VARTEXT ','
+ LAYOUT DATAIN_LAYOUT
+ APPLY INSERT_DML;
+
+.END MLOAD;
+
+.LOGOFF;

@@ -1,0 +1,74 @@
+.LOGTABLE mylogtablecpu;
+
+.LOGON masterserver.mycluster.com/myadmin,myadmin;
+
+database mytestdb;
+
+
+.BEGIN IMPORT MLOAD
+      TABLES collectl_cpu;
+
+.LAYOUT DATAIN_LAYOUT INDICATORS;
+.FIELD hostname * VARCHAR(50);
+.FIELD date_cpu * VARCHAR(50);
+.FIELD time_cpu * VARCHAR(50);
+.FIELD user_cpu * VARCHAR(50);
+.FIELD nice * VARCHAR(50);
+.FIELD sys * VARCHAR(50);
+.FIELD wait_cpu * VARCHAR(50);
+.FIELD irq * VARCHAR(50);
+.FIELD soft * VARCHAR(50);
+.FIELD steal * VARCHAR(50);
+.FIELD ideal * VARCHAR(50);
+.FIELD totl * VARCHAR(50);
+.FIELD guest * VARCHAR(50);
+.FIELD guestN * VARCHAR(50);
+.FIELD intrpt_ps * VARCHAR(50);
+.FIELD ctx_ps * VARCHAR(50);
+.FIELD proc_ps * VARCHAR(50);
+.FIELD procque * VARCHAR(50);
+.FIELD procrun * VARCHAR(50);
+.FIELD lavg1 * VARCHAR(50);
+.FIELD lavg5 * VARCHAR(50);
+.FIELD lavg15 * VARCHAR(50);
+.FIELD runtot * VARCHAR(50);
+.FIELD blktot * VARCHAR(50);
+
+
+.DML LABEL INSERT_DML;
+
+INSERT INTO collectl_cpu (
+hostname =:hostname
+,date_cpu = CAST(:date_cpu as DATE)
+,time_cpu = CAST(:time_cpu as TIME)
+,user_cpu = CAST(:user_cpu as bigint)
+,nice = CAST(:nice as bigint)
+,sys = CAST(:sys as bigint)
+,wait_cpu = CAST(:wait_cpu as bigint)
+,irq = CAST(:irq as bigint)
+,soft = CAST(:soft as bigint)
+,steal = CAST(:steal as bigint)
+,ideal = CAST(:ideal as bigint)
+,totl = CAST(:totl as bigint)
+,guest = CAST(:guest as bigint)
+,guestN = CAST(:guestN as bigint)
+,intrpt_ps = CAST(:intrpt_ps as bigint)
+,ctx_ps = CAST(:ctx_ps as bigint)
+,proc_ps = CAST(:proc_ps as bigint)
+,procque = CAST(:procque as bigint)
+,procrun = CAST(:procrun as bigint)
+,lavg1 = CAST(:lavg1 as Decimal)
+,lavg5 = CAST(:lavg5 as Decimal)
+,lavg15 = CAST(:lavg15 as Decimal)
+,runtot = CAST(:runtot as bigint)
+,blktot = CAST(:blktot as bigint)
+);
+
+.IMPORT INFILE /root/collectlMasterTemp/output/cpu.txt
+ FORMAT VARTEXT ','
+ LAYOUT DATAIN_LAYOUT
+ APPLY INSERT_DML;
+
+.END MLOAD;
+
+.LOGOFF;

@@ -1,0 +1,83 @@
+.LOGTABLE mylogtableprc;
+
+.LOGON masterserver.mycluster.com/myadmin,myadmin;
+
+database mytestdb;
+
+.BEGIN IMPORT MLOAD
+      TABLES collectl_prc;
+
+.LAYOUT DATAIN_LAYOUT INDICATORS;
+.FIELD hostname * VARCHAR(50);
+.FIELD date_prc * VARCHAR(50);
+.FIELD time_prc * VARCHAR(50);
+.FIELD PID * VARCHAR(50);
+.FIELD User_prc * VARCHAR(50);
+.FIELD PR * VARCHAR(50);
+.FIELD PPID * VARCHAR(50);
+.FIELD THRD * VARCHAR(50);
+.FIELD S * VARCHAR(50);
+.FIELD VmSize * VARCHAR(50);
+.FIELD VmLck * VARCHAR(50);
+.FIELD VmRSS * VARCHAR(50);
+.FIELD VmData * VARCHAR(50);
+.FIELD VmStk * VARCHAR(50);
+.FIELD VmExe * VARCHAR(50);
+.FIELD VmLib * VARCHAR(50);
+.FIELD CPU * VARCHAR(50);
+.FIELD SysT * VARCHAR(50);
+.FIELD UsrT * VARCHAR(50);
+.FIELD PCT * VARCHAR(50);
+.FIELD RKB * VARCHAR(50);
+.FIELD WKB * VARCHAR(50);
+.FIELD RKBC * VARCHAR(50);
+.FIELD WKBC * VARCHAR(50);
+.FIELD RSYS * VARCHAR(50);
+.FIELD WSYS * VARCHAR(50);
+.FIELD CNCL * VARCHAR(50);
+.FIELD MajF * VARCHAR(50);
+.FIELD MinF * VARCHAR(50);
+.FIELD Command * VARCHAR(20000);
+
+.DML LABEL INSERT_DML;
+INSERT INTO collectl_prc (
+hostname =:hostname
+,date_prc = CAST(:date_prc as DATE)
+,time_prc = CAST(:time_prc as TIME)
+,PID = CAST(:PID as BIGINT)
+,User_prc =:User_prc
+,PR =:PR
+,PPID = CAST(:PPID as BIGINT)
+,THRD = CAST(:THRD as BIGINT)
+,S =:S
+,VmSize = CAST(:VmSize as BIGINT)
+,VmLck = CAST(:VmLck as BIGINT)
+,VmRSS = CAST(:VmRSS as BIGINT)
+,VmData = CAST(:VmData as BIGINT)
+,VmStk = CAST(:VmStk as BIGINT)
+,VmExe = CAST(:VmExe as BIGINT)
+,VmLib = CAST(:VmLib as BIGINT)
+,CPU = CAST(:CPU as BIGINT)
+,SysT = CAST(:SysT as DECIMAL)
+,UsrT = CAST(:UsrT as DECIMAL)
+,PCT = CAST(:PCT as BIGINT)
+,RKB = CAST(:RKB as BIGINT)
+,WKB = CAST(:WKB as BIGINT)
+,RKBC = CAST(:RKBC as BIGINT)
+,WKBC = CAST(:WKBC as BIGINT)
+,RSYS = CAST(:RSYS as BIGINT)
+,WSYS = CAST(:WSYS as BIGINT)
+,CNCL = CAST(:CNCL as BIGINT)
+,MajF = CAST(:MajF as BIGINT)
+,MinF = CAST(:MinF as BIGINT)
+,Command=:Command
+);
+
+.IMPORT INFILE /root/collectlMasterTemp/output/prc.txt
+ FORMAT VARTEXT ','
+ LAYOUT DATAIN_LAYOUT
+ APPLY INSERT_DML;
+
+.END MLOAD;
+
+.LOGOFF;

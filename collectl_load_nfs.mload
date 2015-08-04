@@ -1,0 +1,61 @@
+.LOGTABLE mylogtablenfs;
+
+.LOGON masterserver.mycluster.com/myadmin,myadmin;
+
+database mytestdb;
+
+
+.BEGIN IMPORT MLOAD
+      TABLES collectl_nfs;
+
+.LAYOUT DATAIN_LAYOUT INDICATORS;
+.FIELD hostname * VARCHAR(50);
+.FIELD date_nfs * VARCHAR(50);
+.FIELD time_nfs * VARCHAR(50);
+.FIELD ReadsS * VARCHAR(50);
+.FIELD WritesS * VARCHAR(50);
+.FIELD MetaS * VARCHAR(50);
+.FIELD CommitS * VARCHAR(50);
+.FIELD Udp * VARCHAR(50);
+.FIELD Tcp * VARCHAR(50);
+.FIELD TcpConn * VARCHAR(50);
+.FIELD BadAuth * VARCHAR(50);
+.FIELD BadClient * VARCHAR(50);
+.FIELD ReadsC * VARCHAR(50);
+.FIELD WritesC * VARCHAR(50);
+.FIELD MetaC * VARCHAR(50);
+.FIELD CommitC * VARCHAR(50);
+.FIELD Retrans * VARCHAR(50);
+.FIELD AuthRef * VARCHAR(50);
+
+.DML LABEL INSERT_DML;
+INSERT INTO collectl_nfs (
+
+hostname =:hostname
+,date_nfs = CAST(:date_nfs as DATE)
+,time_nfs = CAST(:time_nfs as TIME)
+,ReadsS = CAST(:ReadsS as BIGINT)
+,WritesS = CAST(:WritesS as BIGINT)
+,MetaS = CAST(:MetaS as BIGINT)
+,CommitS = CAST(:CommitS as BIGINT)
+,Udp = CAST(:Udp as BIGINT)
+,Tcp = CAST(:Tcp as BIGINT)
+,TcpConn = CAST(:TcpConn as BIGINT)
+,BadAuth = CAST(:BadAuth as BIGINT)
+,BadClient = CAST(:BadClient as BIGINT)
+,ReadsC = CAST(:ReadsC as BIGINT)
+,WritesC = CAST(:WritesC as BIGINT)
+,MetaC = CAST(:MetaC as BIGINT)
+,CommitC = CAST(:CommitC as BIGINT)
+,Retrans = CAST(:Retrans as BIGINT)
+,AuthRef = CAST(:AuthRef as BIGINT)
+);
+
+.IMPORT INFILE /root/collectlMasterTemp/output/nfs.txt
+ FORMAT VARTEXT ','
+ LAYOUT DATAIN_LAYOUT
+ APPLY INSERT_DML;
+
+.END MLOAD;
+
+.LOGOFF;
